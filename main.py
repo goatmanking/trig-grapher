@@ -110,10 +110,16 @@ def drawPoints(w:int, h:int ,angle: int, period: int):
     period = (90 / period)
     ratio = int(angle/period)
     ratio_of_angle = (w-40)/angle
+    ratio_of_text = 1
+    if (ratio_of_angle <= 2):
+            ratio_of_text * (2/ratio_of_angle)
+    print(ratio_of_text)
+    Pointfont = pygame.font.Font('./trig-grapher/fonts/LycheeSoda.ttf', int(24 / ratio_of_text))
+
     for i in range(ratio):
         if not i == 0:
             sine_value = math.sin(math.radians((i * period)))
-            font_surf = font.render(f'{i * period}', False, (0,0,0))
+            font_surf = Pointfont.render(f'{i * period}', False, (0,0,0))
             x = ((i * period )* ratio_of_angle) + 40
             pygame.draw.line(screen, 'black', (x, (h/2) - 20), (x, (h/2) + 20), 4)
             screen.blit(font_surf, (x - 10, (h/2) + 30))
@@ -157,7 +163,7 @@ def drawAmplitude(amplitude, b):
 
 
 def isAnInteger(unicode):
-    number_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.']
+    number_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '.', '-']
 
     for i in number_list:
         if unicode == i:
