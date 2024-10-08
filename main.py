@@ -31,6 +31,23 @@ period_text_rect = pygame.Rect(400, 200, 142, 32)
 amplitude_text_rect = pygame.Rect(690, 200, 142, 32)
 b_text_rect = pygame.Rect(1090, 200, 142, 32)
 
+
+color_tan_btn = 'lightblue'
+color_cos_btn = 'pink'
+color_sin_btn = '#f7b065'
+
+tan_btn_rect = pygame.draw.rect(screen, color_tan_btn, (490, 300, 140, 42), 0, 2)
+cos_btn_rect = pygame.draw.rect(screen, color_cos_btn, (tan_btn_rect.x + 100, 300, 120, 42), 0,2)
+sin_btn_rect = pygame.draw.rect(screen, color_sin_btn, (cos_btn_rect.x + 120, 300, 80, 42), 0,2)
+
+
+
+is_sin_btn_pressed = False
+is_tan_btn_pressed = False
+is_cos_btn_pressed = False
+
+
+
 def drawLine(w:int, h: int, angle:int, func:str, period:int):
     pygame.draw.line(screen, 'black', (0,h/2), (w,  h/2), 5)
     pygame.draw.line(screen, 'black', (40, 0), (40, 720), 5)   
@@ -179,6 +196,8 @@ p_font =  font3.render(f'Period: ' ,True,  'black')
 amp_font =  font3.render(f'Amplitude:' ,True,  'black')
 ba_font =  font3.render(f'B-value(use 0 if none): ' ,True, 'black')
 
+
+
 delay_time = 0
 
 
@@ -204,13 +223,30 @@ while running:
                 selected_b_rect = False
                 selected_amplitude_rect = False
                 selected_period_rect = False
-            if generate_btn_rect.collidepoint(pygame.mouse.get_pos()):
+            
+            if tan_btn_rect.collidepoint(pygame.mouse.get_pos()):
+                is_tan_btn_pressed = True
+                is_sin_btn_pressed = False
+                is_cos_btn_pressed = False
+
+            elif sin_btn_rect.collidepoint(pygame.mouse.get_pos()):
+                is_sin_btn_pressed = True
+                is_tan_btn_pressed = False
+                is_cos_btn_pressed = False
+           
+            elif cos_btn_rect.collidepoint(pygame.mouse.get_pos()):
+                is_cos_btn_pressed = True
+                is_sin_btn_pressed = False
+                is_tan_btn_pressed = False
+
+            if generate_btn_rect.collidepoint(pygame.mouse.get_pos()) and not (angle_text == '' or period_text == '' or b_text == '' or amplitude_text == ''):
                 print("generate")
                 ANGLE = int(angle_text)
                 PERIOD = float(period_text)
                 b = int(b_text)
                 AMPLITUDE = int(amplitude_text)
                 trig_graph_started = True
+            
         if event.type == pygame.KEYDOWN and not trig_graph_started: # bro wtf is this code shouldve just made a function to make the code readibility better
           #  if not (amplitude_font.get_width()) >= 100 and not (angle_font.get_width()) >= 100 and not (b_font.get_width()) >= 100 and not (period_font.get_width()) >= 100:
             if isAnInteger(event.unicode) or event.key == pygame.K_BACKSPACE:
@@ -259,6 +295,12 @@ while running:
             #        b_font =  font.render(f'{b_text}' ,False, (0, 255, 0))
             
     if trig_graph_started:
+        if is_sin_btn_pressed:
+            func = 's'
+        elif is_cos_btn_pressed:
+            func = 'c'
+        elif is_tan_btn_pressed:
+            func = 't'
 
         screen.fill("white")
 
@@ -274,25 +316,51 @@ while running:
     else:
         screen.blit(background, background.get_rect())
         #if (angle_font.get_width() + 30) >= angle_text_rect.w:  angle_text_rect.w = angle_font.get_width() + 30
-        pygame.draw.rect(screen, 'white', angle_text_rect, 0, 2)
+        pygame.draw.rect(screen, '#dddddd', angle_text_rect, 0, 2)
         screen.blit(a_font, (angle_text_rect.x - 90, angle_text_rect.y))
 
        # if (period_font.get_width() + 30) >= period_text_rect.w:  period_text_rect.w = period_font.get_width() + 30
-        pygame.draw.rect(screen, 'white', period_text_rect, 0, 2)
+        pygame.draw.rect(screen, '#dddddd', period_text_rect, 0, 2)
         screen.blit(p_font, (period_text_rect.x - 90, period_text_rect.y))
 
         #if (amplitude_font.get_width() + 30) >= amplitude_text_rect.w:  amplitude_text_rect.w = amplitude_font.get_width() + 30
-        pygame.draw.rect(screen, 'white', amplitude_text_rect, 0, 2)
+        pygame.draw.rect(screen, '#dddddd', amplitude_text_rect, 0, 2)
         screen.blit(amp_font, (amplitude_text_rect.x - 130, amplitude_text_rect.y))
 
        # if (b_font.get_width() + 30) >= b_text_rect.w:  b_text_rect.w = b_font.get_width() + 30
-        pygame.draw.rect(screen, 'white', b_text_rect, 0, 2)
+        pygame.draw.rect(screen, '#dddddd', b_text_rect, 0, 2)
         screen.blit(ba_font, (b_text_rect.x - 240, b_text_rect.y))
+
+        tan_func_font = font4.render('tan', True, 'black')
+        if is_tan_btn_pressed:
+            color_tan_btn = '#017dc2'
+            color_sin_btn = 'orange'
+            color_cos_btn = 'pink'
+        elif is_cos_btn_pressed:
+            color_cos_btn = '#f73c71'
+            color_tan_btn = 'lightblue'
+            color_sin_btn = 'orange'
+        elif is_sin_btn_pressed:
+            color_sin_btn = '#d95218'
+            color_tan_btn = 'lightblue'
+            color_cos_btn = 'pink'
+
+        tan_btn_rect = pygame.draw.rect(screen, color_tan_btn, (490, 300, 140, 42), 0, 2)
+        screen.blit(tan_func_font, ((tan_btn_rect.x) + 10, tan_btn_rect.y -3))
+
+        cos_btn_rect = pygame.draw.rect(screen, color_cos_btn, (tan_btn_rect.x + 100, 300, 120, 42), 0,2)
+        cos_func_font = font4.render('cosine', True, 'black')
+        screen.blit(cos_func_font, ((cos_btn_rect.x) + 10, cos_btn_rect.y -3))
+
+        sin_btn_rect = pygame.draw.rect(screen, color_sin_btn, (cos_btn_rect.x + 120, 300, 80, 42), 0,2)
+        sin_func_font = font4.render('sine', True, 'black')
+        screen.blit(sin_func_font, ((sin_btn_rect.x) + 10, sin_btn_rect.y -3))
+
 
 
         generate_font = font4.render('Generate', True, 'white')
 
-        generate_btn_rect  = pygame.draw.rect(screen, 'lightgreen', (480, 640, 300, 42), 0, 8)
+        generate_btn_rect  = pygame.draw.rect(screen, 'lightgreen', (490, 640, 300, 42), 0, 8)
         screen.blit(generate_font, ((generate_btn_rect.x) + 70, generate_btn_rect.y -3))
 
         color = ['green', 'red', 'blue', 'orange', 'purple', 'magenta', 'yellow']
