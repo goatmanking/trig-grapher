@@ -67,11 +67,11 @@ def drawLine(w:int, h: int, angle:int, func:str, period:int):
             
             sine_value = math.sin(math.radians(i))
             if sine_value > 0 or sine_value ==  math.sin(math.radians(0)):
-                pygame.draw.line(screen, 'green',(prev_x, prev_y), ((i * ratio_of_angle) + 40, h/2 -(sine_value * h/2)))
+                pygame.draw.line(screen, 'green',(prev_x, prev_y), ((i * ratio_of_angle) + 40, h/2 -(sine_value * h/2)), 3)
                 prev_x = (i * ratio_of_angle) + 40
                 prev_y = h/2 -(sine_value * h/2)
             elif sine_value < 0:
-                pygame.draw.line(screen, 'red',(prev_x, prev_y), ((i * ratio_of_angle) + 40,  h/2 -(sine_value * h/2)))
+                pygame.draw.line(screen, 'red',(prev_x, prev_y), ((i * ratio_of_angle) + 40,  h/2 -(sine_value * h/2)), 3)
                 prev_x = (i * ratio_of_angle) + 40
                 prev_y = h/2 -(sine_value * h/2)
     elif func == 'c':
@@ -96,11 +96,11 @@ def drawLine(w:int, h: int, angle:int, func:str, period:int):
                 if not i % p == 0:
                     tan_value = math.tan(math.radians(i))
                     if tan_value > 0 or tan_value ==  math.tan(math.radians(0)):
-                        pygame.draw.line(screen, 'green',(prev_x, prev_y), ((i * ratio_of_angle) + 40, h/2 -(tan_value * h/2)))
+                        pygame.draw.line(screen, 'green',(prev_x, prev_y), ((i * ratio_of_angle) + 40, h/2 -(tan_value * h/2)), 3)
                         prev_x = (i * ratio_of_angle) + 40
                         prev_y = h/2 -(tan_value * h/2)
                     elif tan_value < 0:
-                        pygame.draw.line(screen, 'red',(prev_x, prev_y), ((i * ratio_of_angle) + 40,  h/2 -(tan_value * h/2)))
+                        pygame.draw.line(screen, 'red',(prev_x, prev_y), ((i * ratio_of_angle) + 40,  h/2 -(tan_value * h/2)), 3)
                         prev_x = (i * ratio_of_angle) + 40
                         prev_y = h/2 -(tan_value * h/2)
                 
@@ -113,12 +113,10 @@ def drawPoints(w:int, h:int ,angle: int, period: int):
     ratio_of_text = 1
     if (ratio_of_angle <= 2):
             ratio_of_text * (2/ratio_of_angle)
-    print(ratio_of_text)
     Pointfont = pygame.font.Font('./trig-grapher/fonts/LycheeSoda.ttf', int(24 / ratio_of_text))
 
     for i in range(ratio):
         if not i == 0:
-            sine_value = math.sin(math.radians((i * period)))
             font_surf = Pointfont.render(f'{i * period}', False, (0,0,0))
             x = ((i * period )* ratio_of_angle) + 40
             pygame.draw.line(screen, 'black', (x, (h/2) - 20), (x, (h/2) + 20), 4)
@@ -209,13 +207,10 @@ delay_time = 0
 
 while running:
 
-    # poll for events
-    # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and not trig_graph_started:
-            # print(f"Mouse coords: {pygame.mouse.get_pos()}\nAngle: {((pygame.mouse.get_pos()[0]) - 40) / ratio}")
             if angle_text_rect.collidepoint(pygame.mouse.get_pos()):
                 selected_angle_rect = True
             elif period_text_rect.collidepoint(pygame.mouse.get_pos()):
